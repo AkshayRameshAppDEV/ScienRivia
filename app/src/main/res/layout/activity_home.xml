@@ -54,4 +54,15 @@
         android:text="Take the quiz"
         android:textSize="25sp"
         android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/titleTextView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="130dp"
+        android:onClick="close"
+        app:srcCompat="@drawable/cancel" />
 </RelativeLayout>

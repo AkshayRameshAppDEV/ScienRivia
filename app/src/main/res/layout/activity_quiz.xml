@@ -14,7 +14,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        app:srcCompat="@drawable/homescreenpic" />
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/quizbg" />
 
     <TextView
         android:id="@+id/textView"
@@ -23,7 +24,17 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="HELLO QUIZ PAGE"
-        android:textColor="@android:color/background_dark"
+        android:textColor="?android:attr/colorPressedHighlight"
         android:textSize="30sp"
         android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/qb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="38dp"
+        android:onClick="quit"
+        android:text="quit" />
 </RelativeLayout>
