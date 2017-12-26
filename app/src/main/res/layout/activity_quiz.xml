@@ -21,20 +21,82 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/my_rounded_bg"
+        android:text="What kind of animals live in both water and on land?"
+        android:textColor="#ffff00"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:tag="0"/>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignStart="@+id/textView3"
+        android:layout_below="@+id/textView2"
+        android:layout_marginTop="22dp"
+        android:background="@drawable/my_rounded_bg"
+        android:text="C. porifera"
+        android:textColor="#ffff00"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:tag="3"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignStart="@+id/textView4"
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/my_rounded_bg"
+        android:text="B. reptiles"
+        android:textColor="#ffff00"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:tag="2"/>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView5"
+        android:layout_alignStart="@+id/textView5"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="86dp"
+        android:background="@drawable/my_rounded_bg"
+        android:text="A. mammals"
+        android:textColor="#ffff00"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:tag="1"/>
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView4"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="HELLO QUIZ PAGE"
-        android:textColor="?android:attr/colorPressedHighlight"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="22dp"
+        android:background="@drawable/my_rounded_bg"
+        android:text="D. amphibians"
+        android:textColor="#ffff00"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:tag="4"/>
 
     <Button
         android:id="@+id/qb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="38dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:onClick="quit"
         android:text="quit" />
 </RelativeLayout>

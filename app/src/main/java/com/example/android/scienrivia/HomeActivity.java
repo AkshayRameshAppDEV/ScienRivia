@@ -26,6 +26,7 @@ public class HomeActivity extends AppCompatActivity
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
+
         playButton = (Button) findViewById(R.id.playButton);
 
 
