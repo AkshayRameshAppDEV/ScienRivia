@@ -7,10 +7,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class HomeActivity extends AppCompatActivity
 {
     Button playButton;
+    Button decreaseButton, increaseButton;
+    TextView updateTextView;
+    int updateTextViewCounter = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,6 +31,10 @@ public class HomeActivity extends AppCompatActivity
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
 
+        decreaseButton = (Button) findViewById(R.id.decreaseButton);
+        decreaseButton.setEnabled(false);
+        increaseButton = (Button) findViewById(R.id.increaseButton);
+        updateTextView = (TextView) findViewById(R.id.updateTextView);
         playButton = (Button) findViewById(R.id.playButton);
 
 
@@ -95,6 +103,30 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    public void incButton(View view) {
+        decreaseButton.setEnabled(true);
+        updateTextViewCounter++;
+//        Log.i("j",""+updateTextViewCounter);
+        if (updateTextViewCounter == 20) {
+            increaseButton.setEnabled(false);
+            updateTextView.setText("" + updateTextViewCounter);
+        } else {
+            updateTextView.setText("" + updateTextViewCounter);
+        }
+
+    }
+
+    public void decButton(View view) {
+        increaseButton.setEnabled(true);
+        updateTextViewCounter--;
+        if (updateTextViewCounter == 5) {
+
+            decreaseButton.setEnabled(false);
+            updateTextView.setText("" + updateTextViewCounter);
+        } else {
+            updateTextView.setText("" + updateTextViewCounter);
+        }
+    }
 
     public void playGame(View view)
     {
