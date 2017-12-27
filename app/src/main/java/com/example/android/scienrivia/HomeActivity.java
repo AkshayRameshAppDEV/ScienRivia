@@ -106,7 +106,6 @@ public class HomeActivity extends AppCompatActivity
     public void incButton(View view) {
         decreaseButton.setEnabled(true);
         updateTextViewCounter++;
-//        Log.i("j",""+updateTextViewCounter);
         if (updateTextViewCounter == 20) {
             increaseButton.setEnabled(false);
             updateTextView.setText("" + updateTextViewCounter);
