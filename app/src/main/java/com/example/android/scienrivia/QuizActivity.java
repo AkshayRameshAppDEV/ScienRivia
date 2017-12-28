@@ -54,6 +54,12 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 //if user select "No", just cancel this dialog and continue with app
                 dialog.cancel();
+                //Show and hide navigation bar (Immersive mode)
+                View showAndHideBars = findViewById(R.id.quizlayout);
+                showAndHideBars.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
 
             }
         });
