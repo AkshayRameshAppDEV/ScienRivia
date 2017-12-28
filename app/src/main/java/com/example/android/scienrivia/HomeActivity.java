@@ -179,7 +179,9 @@ public class HomeActivity extends AppCompatActivity
     public void playGame(View view)
     {
         Intent quizPage = new Intent(this, QuizActivity.class);
+        quizPage.putExtra("updateCounter", updateTextViewCounter);
         startActivity(quizPage);
+
     }
 
 

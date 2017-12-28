@@ -19,21 +19,29 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class QuizActivity extends AppCompatActivity {
+    ArrayList<String> questionsData = new ArrayList<>();
+    ArrayList<String> answerData = new ArrayList<>();
+    ArrayList<String> incorrectAnswerData = new ArrayList<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
-
+        Intent getUpdateRangeIntent = getIntent();
+        int updateCountFromHome = getUpdateRangeIntent.getIntExtra("updateCounter", 0);
+//        Log.i("update",""+updateCountFromHome);
         //Show and hide navigation bar (Immersive mode)
         View showAndHideBars = findViewById(R.id.quizlayout);
         showAndHideBars.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
         DownloadTask task = new DownloadTask();
-        task.execute("https://opentdb.com/api.php?amount=20&category=17&difficulty=easy&type=multiple");
+        task.execute("https://opentdb.com/api.php?amount=" + updateCountFromHome + "&category=17&difficulty=easy&type=multiple");
 
     }
 
