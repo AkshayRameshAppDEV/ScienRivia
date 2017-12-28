@@ -2,12 +2,16 @@ package com.example.android.scienrivia;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 
 public class HomeActivity extends AppCompatActivity
 {
@@ -16,12 +20,11 @@ public class HomeActivity extends AppCompatActivity
     TextView updateTextView;
     int updateTextViewCounter = 5;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
 
 
         //Show and hide navigation bar (Immersive mode)
@@ -38,8 +41,44 @@ public class HomeActivity extends AppCompatActivity
         playButton = (Button) findViewById(R.id.playButton);
 
 
+        if (isInternetOn()) {
+            playButton.setEnabled(true);
+        } else {
+            playButton.setEnabled(false);
+            increaseButton.setEnabled(false);
+            decreaseButton.setEnabled(false);
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.mylayout), "NO INTERNET CONNECTION", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onRestart();
+                        }
+                    });
+
+// Changing message text color
+            snackbar.setActionTextColor(Color.RED);
+
+// Changing action button text color
+            View sbView = snackbar.getView();
+            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(Color.YELLOW);
+            snackbar.show();
+        }
+
+
     }
 
+    @Override
+    protected void onRestart() {
+
+
+        super.onRestart();
+        Intent i = new Intent(this, HomeActivity.class);  //your class
+        startActivity(i);
+        finish();
+
+    }
 
     @Override
     public void onBackPressed()
@@ -131,5 +170,33 @@ public class HomeActivity extends AppCompatActivity
     {
         Intent quizPage = new Intent(this, QuizActivity.class);
         startActivity(quizPage);
+    }
+
+
+    public final boolean isInternetOn() {
+
+        // get Connectivity Manager object to check connection
+        ConnectivityManager connec =
+                (ConnectivityManager) getSystemService(getBaseContext().CONNECTIVITY_SERVICE);
+
+        // Check for network connections
+        if (connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTED ||
+                connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTING ||
+                connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTING ||
+                connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTED) {
+
+            // if connected with internet
+
+
+            return true;
+
+        } else if (
+                connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.DISCONNECTED ||
+                        connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.DISCONNECTED) {
+
+
+            return false;
+        }
+        return false;
     }
 }
