@@ -19,43 +19,47 @@ public class QuizActivity extends AppCompatActivity {
         showAndHideBars.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+
     }
 
-    public void quit(View view)
+    @Override
+    protected void onRestart() {
+
+
+        super.onRestart();
+        Intent i = new Intent(this, HomeActivity.class);  //your class
+        startActivity(i);
+        finish();
+
+    }
+
+    @Override
+    public void onBackPressed()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
-        builder.setMessage("Are you sure you want to exit ScienRivia ?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setMessage("Are you sure ?");
+        builder.setPositiveButton("Restart", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
                 //if user pressed "yes", then he is allowed to exit from application
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                startActivity(intent);
-                int pid = android.os.Process.myPid();
-                android.os.Process.killProcess(pid);
+                onRestart();
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener()
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //if user select "No", just cancel this dialog and continue with app
                 dialog.cancel();
+
             }
         });
         AlertDialog alert = builder.create();
         alert.show();
-
-
-
-
-
-
     }
-
 
 
 }
