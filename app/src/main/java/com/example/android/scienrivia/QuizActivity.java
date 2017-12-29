@@ -20,15 +20,21 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Random;
 
 public class QuizActivity extends AppCompatActivity {
+
     int totalScore = 0;
     TextView questionTextView, firstOption, secondOption, thirdOption, fourthOption;
+    Random random;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+
+        random = new Random();
+        int randomNumberForURL = random.nextInt(24);
 
         questionTextView = (TextView) findViewById(R.id.questiontextView);
         firstOption = (TextView) findViewById(R.id.textView3);
@@ -38,9 +44,10 @@ public class QuizActivity extends AppCompatActivity {
 
 
 
+
         Intent getUpdateRangeIntent = getIntent();
         int updateCountFromHome = getUpdateRangeIntent.getIntExtra("updateCounter", 0);
-//        Log.i("update",""+updateCountFromHome);
+//
         //Show and hide navigation bar (Immersive mode)
         View showAndHideBars = findViewById(R.id.quizlayout);
         showAndHideBars.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -48,7 +55,7 @@ public class QuizActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
         DownloadTask task = new DownloadTask();
 //        task.execute("https://opentdb.com/api.php?amount=" + updateCountFromHome + "&category=17&difficulty=easy&type=multiple");
-        task.execute("https://qriusity.com/v1/categories/20/questions?page=150&limit=1");
+        task.execute("https://qriusity.com/v1/categories/20/questions?page=" + randomNumberForURL + "&limit=" + updateCountFromHome);
 
 
     }
@@ -130,28 +137,31 @@ public class QuizActivity extends AppCompatActivity {
         protected void onPostExecute(String resultURL) {
             super.onPostExecute(resultURL);
             try {
-                JSONArray jsonArray = new JSONArray(resultURL);
 
-                JSONObject jsonObject = (JSONObject) jsonArray.get(0);
-                String question = jsonObject.getString("question");
-                String option1 = jsonObject.getString("option1");
-                String option2 = jsonObject.getString("option2");
-                String option3 = jsonObject.getString("option3");
-                String option4 = jsonObject.getString("option4");
-                String answer = jsonObject.getString("answers");
-                int ans = Integer.parseInt(answer);
-                String ac = "";
-                if (ans == 1) {
-                    ac = "A";
-                } else if (ans == 2) {
-                    ac = "B";
-                } else if (ans == 3) {
-                    ac = "C";
-                } else if (ans == 4) {
-                    ac = "D";
+                JSONArray jsonArray = new JSONArray(resultURL);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                    String question = jsonObject.getString("question");
+                    String option1 = jsonObject.getString("option1");
+                    String option2 = jsonObject.getString("option2");
+                    String option3 = jsonObject.getString("option3");
+                    String option4 = jsonObject.getString("option4");
+                    String answer = jsonObject.getString("answers");
+                    int ans = Integer.parseInt(answer);
+                    String ac = "";
+                    if (ans == 1) {
+                        ac = "A";
+                    } else if (ans == 2) {
+                        ac = "B";
+                    } else if (ans == 3) {
+                        ac = "C";
+                    } else if (ans == 4) {
+                        ac = "D";
+                    }
+                    String s = question + "\n" + "A." + option1 + "\n" + "B." + option2 + "\n" + "C." + option3 + "\n" + "D." + option4 + "\n" + "Answer is:" + ac;
+                    Log.i("po", s);
                 }
-                String s = question + "\n" + "A." + option1 + "\n" + "B." + option2 + "\n" + "C." + option3 + "\n" + "D." + option4 + "\n" + "Answer is:" + ac;
-                Log.i("po", s);
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
