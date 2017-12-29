@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,19 +20,24 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 public class QuizActivity extends AppCompatActivity {
-    ArrayList<String> questionsData = new ArrayList<>();
-    ArrayList<String> answerData = new ArrayList<>();
-    ArrayList<String> incorrectAnswerData = new ArrayList<>();
-
-
+    int totalScore = 0;
+    TextView questionTextView, firstOption, secondOption, thirdOption, fourthOption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+
+        questionTextView = (TextView) findViewById(R.id.questiontextView);
+        firstOption = (TextView) findViewById(R.id.textView3);
+        secondOption = (TextView) findViewById(R.id.textView7);
+        thirdOption = (TextView) findViewById(R.id.textView6);
+        fourthOption = (TextView) findViewById(R.id.textView8);
+
+
+
         Intent getUpdateRangeIntent = getIntent();
         int updateCountFromHome = getUpdateRangeIntent.getIntExtra("updateCounter", 0);
 //        Log.i("update",""+updateCountFromHome);
@@ -41,7 +47,9 @@ public class QuizActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
         DownloadTask task = new DownloadTask();
-        task.execute("https://opentdb.com/api.php?amount=" + updateCountFromHome + "&category=17&difficulty=easy&type=multiple");
+//        task.execute("https://opentdb.com/api.php?amount=" + updateCountFromHome + "&category=17&difficulty=easy&type=multiple");
+        task.execute("https://qriusity.com/v1/categories/20/questions?page=150&limit=1");
+
 
     }
 
@@ -119,25 +127,31 @@ public class QuizActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+        protected void onPostExecute(String resultURL) {
+            super.onPostExecute(resultURL);
             try {
-                JSONObject jsonObject = new JSONObject(result);
-                JSONArray results = jsonObject.getJSONArray("results");
-                for (int i = 0; i < results.length(); i++) {
-                    String question = results.getJSONObject(i).getString("question");
-                    String correctAnswer = results.getJSONObject(i).getString("correct_answer");
-                    String incorrectOne = (String) results.getJSONObject(i).getJSONArray("incorrect_answers").get(0);
-                    String incorrectTwo = (String) results.getJSONObject(i).getJSONArray("incorrect_answers").get(1);
-                    String incorrectThree = (String) results.getJSONObject(i).getJSONArray("incorrect_answers").get(2);
-                    String whole = question + "\n" + correctAnswer + "\n" + incorrectOne + "\n" + incorrectTwo + "\n" + incorrectThree;
-                    Log.i("po", whole);
+                JSONArray jsonArray = new JSONArray(resultURL);
+
+                JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+                String question = jsonObject.getString("question");
+                String option1 = jsonObject.getString("option1");
+                String option2 = jsonObject.getString("option2");
+                String option3 = jsonObject.getString("option3");
+                String option4 = jsonObject.getString("option4");
+                String answer = jsonObject.getString("answers");
+                int ans = Integer.parseInt(answer);
+                String ac = "";
+                if (ans == 1) {
+                    ac = "A";
+                } else if (ans == 2) {
+                    ac = "B";
+                } else if (ans == 3) {
+                    ac = "C";
+                } else if (ans == 4) {
+                    ac = "D";
                 }
-
-
-//                    String correctAnswer = results.getJSONObject(0).getString("correct_answer");
-//
-
+                String s = question + "\n" + "A." + option1 + "\n" + "B." + option2 + "\n" + "C." + option3 + "\n" + "D." + option4 + "\n" + "Answer is:" + ac;
+                Log.i("po", s);
 
             } catch (JSONException e) {
                 e.printStackTrace();
