@@ -91,6 +91,7 @@ public class HomeActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which)
             {
                 //if user pressed "yes", then he is allowed to exit from application
+
                 finish();
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
@@ -122,6 +123,8 @@ public class HomeActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which)
             {
                 //if user pressed "yes", then he is allowed to exit from application
+
+
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
                 startActivity(intent);

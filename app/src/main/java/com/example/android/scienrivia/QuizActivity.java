@@ -27,10 +27,11 @@ import java.util.Random;
 public class QuizActivity extends AppCompatActivity {
 
     int totalScore = 0;
+
     int valueFromNextButton = 0;
 
     SQLiteDatabase quizDB;
-    Cursor c;
+    Cursor c = null;
     int noOfScorer = 0;
 
     String question, option1, option2, option3, option4, answer;
@@ -48,8 +49,50 @@ public class QuizActivity extends AppCompatActivity {
     Random random;
 
 
+    public void chooseAnswer(View view) {
+//        int correctAn = 4;
+//        int tagger = Integer.parseInt(view.getTag().toString());
+//        Log.i("answer option touch","The Tag is: "+tagger);
+    }
+
     public void nextQuestion(View view) {
-        deleteDatabase("QUIZ");
+        if (c == null) {
+            c = quizDB.rawQuery("SELECT * FROM quiz", null);
+            c.moveToFirst();
+        }
+        questionTextView.setText("");
+        firstOption.setText("");
+        secondOption.setText("");
+        thirdOption.setText("");
+        fourthOption.setText("");
+
+        if (c != null && c.getCount() > 0 && !c.isAfterLast()) {
+
+
+//            questionW = c.getColumnIndex("questionDB");
+//                    option1W = c.getColumnIndex("option1DB");
+//                    option2W = c.getColumnIndex("option2DB");
+//                    option3W = c.getColumnIndex("option3DB");
+//                    option4W = c.getColumnIndex("option4DB");
+
+            String question = c.getString(c.getColumnIndex("questionDB"));
+            String option1 = c.getString(c.getColumnIndex("option1DB"));
+            String option2 = c.getString(c.getColumnIndex("option2DB"));
+            String option3 = c.getString(c.getColumnIndex("option3DB"));
+            String option4 = c.getString(c.getColumnIndex("option4DB"));
+
+            Log.i("Result", question + "\n" + option1 + "\n" + option2 + "\n" + option3 + "\n" + option4);
+            Log.i("Result", "-----------------------------------------------------------------------------------------");
+
+            questionTextView.setText(question);
+            firstOption.setText(option1);
+            secondOption.setText(option2);
+            thirdOption.setText(option3);
+            fourthOption.setText(option4);
+            c.moveToNext();
+        }
+
+
     }
 
     @Override
@@ -57,6 +100,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+//        deleteDatabase("QUIZ");
         random = new Random();
         int randomNumberForURL = random.nextInt(24);
 
@@ -204,17 +248,16 @@ public class QuizActivity extends AppCompatActivity {
 
                     quizDB.execSQL("INSERT INTO " + "quiz (questionDB, option1DB,option2DB,option3DB, option4DB, correctAnswerDB)" + " VALUES ('" + question + "'," + "'" + option1 + "'," + "'" + option2 + "'," + "'" + option3 + "'," + "'" + option4 + "'," + "'" + answer + "'" + ");");
 
-                    c = quizDB.rawQuery("SELECT * FROM quiz", null);
 
-                    questionW = c.getColumnIndex("questionDB");
-                    option1W = c.getColumnIndex("option1DB");
-                    option2W = c.getColumnIndex("option2DB");
-                    option3W = c.getColumnIndex("option3DB");
-                    option4W = c.getColumnIndex("option4DB");
-                    correctAnswerW = c.getColumnIndex("correctAnswerDB");
-
-
-                    c.moveToFirst();
+//                    questionW = c.getColumnIndex("questionDB");
+//                    option1W = c.getColumnIndex("option1DB");
+//                    option2W = c.getColumnIndex("option2DB");
+//                    option3W = c.getColumnIndex("option3DB");
+//                    option4W = c.getColumnIndex("option4DB");
+//                    correctAnswerW = c.getColumnIndex("correctAnswerDB");
+//
+//
+//                    c.moveToFirst();
 
 
 
@@ -233,17 +276,22 @@ public class QuizActivity extends AppCompatActivity {
 //                    String s = question + "\n" + "A." + option1 + "\n" + "B." + option2 + "\n" + "C." + option3 + "\n" + "D." + option4 + "\n" + "Answer is:" + ac;
 //                    Log.i("po", s);
                 }
-                while ((!c.isAfterLast()) && noOfScorer < updateCountFromHome) {
 
-                    Log.i("QUIZ - Question", c.getString(questionW));
-                    Log.i("QUIZ - option1", c.getString(option1W));
-                    Log.i("QUIZ - option2", c.getString(option2W));
-                    Log.i("QUIZ - option3", c.getString(option3W));
-                    Log.i("QUIZ - option4", c.getString(option4W));
-                    Log.i("QUIZ - correctAnswer", c.getString(correctAnswerW));
 
-                    c.moveToNext();
-                }
+//                while ((!c.isAfterLast()) && noOfScorer < updateCountFromHome) {
+//
+//                    Log.i("QUIZ - Question", c.getString(questionW));
+//                    Log.i("QUIZ - option1", c.getString(option1W));
+//                    Log.i("QUIZ - option2", c.getString(option2W));
+//                    Log.i("QUIZ - option3", c.getString(option3W));
+//                    Log.i("QUIZ - option4", c.getString(option4W));
+//                    Log.i("QUIZ - correctAnswer", c.getString(correctAnswerW));
+//
+//                    c.moveToNext();
+//                }
+                Log.i("j", "---------------------------------------------------------------------------------------------");
+
+
 
 
             } catch (JSONException e) {
