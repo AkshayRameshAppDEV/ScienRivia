@@ -2,13 +2,10 @@ package com.example.android.scienrivia;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,28 +19,24 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class QuizActivity extends AppCompatActivity {
 
-    int totalScore = 0;
 
-    int valueFromNextButton = 0;
 
-    SQLiteDatabase quizDB;
-    Cursor c = null;
-    int noOfScorer = 0;
 
     String question, option1, option2, option3, option4, answer;
 
+    ArrayList<String> questionsList, option1List, option2List, option3List, option4List, answerList;
+
+
     int updateCountFromHome = 0;
 
-    int questionW;
-    int option1W;
-    int option2W;
-    int option3W;
-    int option4W;
-    int correctAnswerW;
+    int nextQuestionCount = 1;
+
+
 
     TextView questionTextView, firstOption, secondOption, thirdOption, fourthOption;
     Random random;
@@ -55,43 +48,109 @@ public class QuizActivity extends AppCompatActivity {
 //        Log.i("answer option touch","The Tag is: "+tagger);
     }
 
+//    public void nextQuestion(View view) {
+//        if (c == null) {
+//            c = quizDB.rawQuery("SELECT * FROM quiz", null);
+//            c.moveToFirst();
+//        }
+//        questionTextView.setText("");
+//        firstOption.setText("");
+//        secondOption.setText("");
+//        thirdOption.setText("");
+//        fourthOption.setText("");
+//
+//        if (c != null && c.getCount() > 0 && !c.isAfterLast()) {
+//
+//
+////            questionW = c.getColumnIndex("questionDB");
+////                    option1W = c.getColumnIndex("option1DB");
+////                    option2W = c.getColumnIndex("option2DB");
+////                    option3W = c.getColumnIndex("option3DB");
+////                    option4W = c.getColumnIndex("option4DB");
+//
+//            String question = c.getString(c.getColumnIndex("questionDB"));
+//            String option1 = c.getString(c.getColumnIndex("option1DB"));
+//            String option2 = c.getString(c.getColumnIndex("option2DB"));
+//            String option3 = c.getString(c.getColumnIndex("option3DB"));
+//            String option4 = c.getString(c.getColumnIndex("option4DB"));
+//
+//            Log.i("Result", question + "\n" + option1 + "\n" + option2 + "\n" + option3 + "\n" + option4);
+//            Log.i("Result", "-----------------------------------------------------------------------------------------");
+//
+//            questionTextView.setText(question);
+//            firstOption.setText(option1);
+//            secondOption.setText(option2);
+//            thirdOption.setText(option3);
+//            fourthOption.setText(option4);
+//            c.moveToNext();
+//        }
+//
+//
+//    }
+
     public void nextQuestion(View view) {
-        if (c == null) {
-            c = quizDB.rawQuery("SELECT * FROM quiz", null);
-            c.moveToFirst();
+        if (nextQuestionCount == questionsList.size()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle("Your Score is: 20/20 ");
+            builder.setMessage("Are you sure ?");
+            builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //if user pressed "yes", then he is allowed to exit from application
+//                deleteDatabase("QUIZ");
+                    questionsList.clear();
+                    option1List.clear();
+                    option2List.clear();
+                    option3List.clear();
+                    option4List.clear();
+                    answerList.clear();
+                    nextQuestionCount = 1;
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_HOME);
+                    startActivity(intent);
+                    int pid = android.os.Process.myPid();
+                    android.os.Process.killProcess(pid);
+                    //Show and hide navigation bar (Immersive mode)
+                    View showAndHideBars = findViewById(R.id.quizlayout);
+                    showAndHideBars.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+
+                }
+            });
+            builder.setNegativeButton("Restart", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //if user select "No", just cancel this dialog and continue with app
+
+//                deleteDatabase("QUIZ");
+                    questionsList.clear();
+                    option1List.clear();
+                    option2List.clear();
+                    option3List.clear();
+                    option4List.clear();
+                    answerList.clear();
+                    nextQuestionCount = 1;
+
+                    onRestart();
+
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+            nextQuestionCount = 1;
+
+
+        } else {
+            questionTextView.setText(questionsList.get(nextQuestionCount).toString());
+            firstOption.setText("A. " + option1List.get(nextQuestionCount).toString());
+            secondOption.setText("B. " + option2List.get(nextQuestionCount).toString());
+            thirdOption.setText("C. " + option3List.get(nextQuestionCount).toString());
+            fourthOption.setText("D. " + option4List.get(nextQuestionCount).toString());
+            nextQuestionCount++;
         }
-        questionTextView.setText("");
-        firstOption.setText("");
-        secondOption.setText("");
-        thirdOption.setText("");
-        fourthOption.setText("");
-
-        if (c != null && c.getCount() > 0 && !c.isAfterLast()) {
-
-
-//            questionW = c.getColumnIndex("questionDB");
-//                    option1W = c.getColumnIndex("option1DB");
-//                    option2W = c.getColumnIndex("option2DB");
-//                    option3W = c.getColumnIndex("option3DB");
-//                    option4W = c.getColumnIndex("option4DB");
-
-            String question = c.getString(c.getColumnIndex("questionDB"));
-            String option1 = c.getString(c.getColumnIndex("option1DB"));
-            String option2 = c.getString(c.getColumnIndex("option2DB"));
-            String option3 = c.getString(c.getColumnIndex("option3DB"));
-            String option4 = c.getString(c.getColumnIndex("option4DB"));
-
-            Log.i("Result", question + "\n" + option1 + "\n" + option2 + "\n" + option3 + "\n" + option4);
-            Log.i("Result", "-----------------------------------------------------------------------------------------");
-
-            questionTextView.setText(question);
-            firstOption.setText(option1);
-            secondOption.setText(option2);
-            thirdOption.setText(option3);
-            fourthOption.setText(option4);
-            c.moveToNext();
-        }
-
 
     }
 
@@ -99,6 +158,13 @@ public class QuizActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+
+        questionsList = new ArrayList<>();
+        option1List = new ArrayList<>();
+        option2List = new ArrayList<>();
+        option3List = new ArrayList<>();
+        option4List = new ArrayList<>();
+        answerList = new ArrayList<>();
 
 //        deleteDatabase("QUIZ");
         random = new Random();
@@ -149,7 +215,14 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //if user pressed "yes", then he is allowed to exit from application
-                deleteDatabase("QUIZ");
+//                deleteDatabase("QUIZ");
+                questionsList.clear();
+                option1List.clear();
+                option2List.clear();
+                option3List.clear();
+                option4List.clear();
+                answerList.clear();
+                nextQuestionCount = 1;
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
                 startActivity(intent);
@@ -169,7 +242,15 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 //if user select "No", just cancel this dialog and continue with app
 
-                deleteDatabase("QUIZ");
+//                deleteDatabase("QUIZ");
+                questionsList.clear();
+                option1List.clear();
+                option2List.clear();
+                option3List.clear();
+                option4List.clear();
+                answerList.clear();
+                nextQuestionCount = 1;
+
                 onRestart();
 
             }
@@ -213,8 +294,7 @@ public class QuizActivity extends AppCompatActivity {
             try {
 
 
-                quizDB = getApplicationContext().openOrCreateDatabase("QUIZ", MODE_PRIVATE, null);
-                quizDB.execSQL("CREATE TABLE IF NOT EXISTS quiz (questionDB VARCHAR, option1DB VARCHAR, option2DB VARCHAR, option3DB VARCHAR, option4DB VARCHAR, correctAnswerDB VARCHAR)");
+
 
                 JSONArray jsonArray = new JSONArray(resultURL);
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -246,52 +326,19 @@ public class QuizActivity extends AppCompatActivity {
 
                     }
 
-                    quizDB.execSQL("INSERT INTO " + "quiz (questionDB, option1DB,option2DB,option3DB, option4DB, correctAnswerDB)" + " VALUES ('" + question + "'," + "'" + option1 + "'," + "'" + option2 + "'," + "'" + option3 + "'," + "'" + option4 + "'," + "'" + answer + "'" + ");");
-
-
-//                    questionW = c.getColumnIndex("questionDB");
-//                    option1W = c.getColumnIndex("option1DB");
-//                    option2W = c.getColumnIndex("option2DB");
-//                    option3W = c.getColumnIndex("option3DB");
-//                    option4W = c.getColumnIndex("option4DB");
-//                    correctAnswerW = c.getColumnIndex("correctAnswerDB");
-//
-//
-//                    c.moveToFirst();
-
-
-
-
-                    int ans = Integer.parseInt(answer);
-                    String ac = "";
-                    if (ans == 1) {
-                        ac = "A";
-                    } else if (ans == 2) {
-                        ac = "B";
-                    } else if (ans == 3) {
-                        ac = "C";
-                    } else if (ans == 4) {
-                        ac = "D";
-                    }
-//                    String s = question + "\n" + "A." + option1 + "\n" + "B." + option2 + "\n" + "C." + option3 + "\n" + "D." + option4 + "\n" + "Answer is:" + ac;
-//                    Log.i("po", s);
+                    questionsList.add(question);
+                    option1List.add(option1);
+                    option2List.add(option2);
+                    option3List.add(option3);
+                    option4List.add(option4);
+                    answerList.add(answer);
                 }
 
-
-//                while ((!c.isAfterLast()) && noOfScorer < updateCountFromHome) {
-//
-//                    Log.i("QUIZ - Question", c.getString(questionW));
-//                    Log.i("QUIZ - option1", c.getString(option1W));
-//                    Log.i("QUIZ - option2", c.getString(option2W));
-//                    Log.i("QUIZ - option3", c.getString(option3W));
-//                    Log.i("QUIZ - option4", c.getString(option4W));
-//                    Log.i("QUIZ - correctAnswer", c.getString(correctAnswerW));
-//
-//                    c.moveToNext();
-//                }
-                Log.i("j", "---------------------------------------------------------------------------------------------");
-
-
+                questionTextView.setText(questionsList.get(0).toString());
+                firstOption.setText("A. " + option1List.get(0).toString());
+                secondOption.setText("B. " + option2List.get(0).toString());
+                thirdOption.setText("C. " + option3List.get(0).toString());
+                fourthOption.setText("D. " + option4List.get(0).toString());
 
 
             } catch (JSONException e) {
