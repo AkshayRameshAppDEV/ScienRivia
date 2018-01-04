@@ -92,8 +92,11 @@ public class HomeActivity extends AppCompatActivity
             {
                 //if user pressed "yes", then he is allowed to exit from application
 
-                finish();
-                android.os.Process.killProcess(android.os.Process.myPid());
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+                int pid = android.os.Process.myPid();
+                android.os.Process.killProcess(pid);
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener()

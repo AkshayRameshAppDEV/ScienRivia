@@ -2,10 +2,14 @@ package com.example.android.scienrivia;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -36,17 +40,35 @@ public class QuizActivity extends AppCompatActivity {
 
     int nextQuestionCount = 1;
 
+    int arrayListgetChooseAnswer = 0;
 
 
     TextView questionTextView, firstOption, secondOption, thirdOption, fourthOption;
     Random random;
 
 
-    public void chooseAnswer(View view) {
-//        int correctAn = 4;
-//        int tagger = Integer.parseInt(view.getTag().toString());
-//        Log.i("answer option touch","The Tag is: "+tagger);
-    }
+//    public void chooseAnswer(View view)
+//    {
+////        int arrayListCorrectAnswer = Integer.parseInt(answerList.get(arrayListgetChooseAnswer));
+////        int tagNumber = Integer.parseInt(view.getTag().toString());
+////        if(arrayListCorrectAnswer == tagNumber)
+////        {
+////            Log.i("correct", "This is the correct answer");
+////
+////        }
+//
+//        firstOption.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.mak
+//            }
+//        });
+//
+//
+//    }
+
+
+
 
 //    public void nextQuestion(View view) {
 //        if (c == null) {
@@ -93,7 +115,7 @@ public class QuizActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setCancelable(false);
             builder.setTitle("Your Score is: 20/20 ");
-            builder.setMessage("Are you sure ?");
+            builder.setMessage("Do You Want To Play Again ?");
             builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -144,12 +166,37 @@ public class QuizActivity extends AppCompatActivity {
 
 
         } else {
+            firstOption.setTextColor(Color.parseColor("#ffff00"));
+            firstOption.setEnabled(true);
+            firstOption.setBackgroundDrawable(getResources().getDrawable(R.drawable.my_rounded_bg));
+            firstOption.setTypeface(Typeface.DEFAULT_BOLD);
+            firstOption.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+
+            secondOption.setTextColor(Color.parseColor("#ffff00"));
+            secondOption.setEnabled(true);
+            secondOption.setBackgroundDrawable(getResources().getDrawable(R.drawable.my_rounded_bg));
+            secondOption.setTypeface(Typeface.DEFAULT_BOLD);
+            secondOption.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+
+            thirdOption.setTextColor(Color.parseColor("#ffff00"));
+            thirdOption.setEnabled(true);
+            thirdOption.setBackgroundDrawable(getResources().getDrawable(R.drawable.my_rounded_bg));
+            thirdOption.setTypeface(Typeface.DEFAULT_BOLD);
+            thirdOption.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+
+            fourthOption.setTextColor(Color.parseColor("#ffff00"));
+            fourthOption.setEnabled(true);
+            fourthOption.setBackgroundDrawable(getResources().getDrawable(R.drawable.my_rounded_bg));
+            fourthOption.setTypeface(Typeface.DEFAULT_BOLD);
+            fourthOption.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+
             questionTextView.setText(questionsList.get(nextQuestionCount).toString());
             firstOption.setText("A. " + option1List.get(nextQuestionCount).toString());
             secondOption.setText("B. " + option2List.get(nextQuestionCount).toString());
             thirdOption.setText("C. " + option3List.get(nextQuestionCount).toString());
             fourthOption.setText("D. " + option4List.get(nextQuestionCount).toString());
             nextQuestionCount++;
+            arrayListgetChooseAnswer++;
         }
 
     }
@@ -198,6 +245,7 @@ public class QuizActivity extends AppCompatActivity {
     protected void onRestart() {
 
 
+
         super.onRestart();
         Intent i = new Intent(this, HomeActivity.class);  //your class
         startActivity(i);
@@ -211,23 +259,10 @@ public class QuizActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         builder.setMessage("Are you sure ?");
-        builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //if user pressed "yes", then he is allowed to exit from application
-//                deleteDatabase("QUIZ");
-                questionsList.clear();
-                option1List.clear();
-                option2List.clear();
-                option3List.clear();
-                option4List.clear();
-                answerList.clear();
-                nextQuestionCount = 1;
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                startActivity(intent);
-                int pid = android.os.Process.myPid();
-                android.os.Process.killProcess(pid);
+                dialog.cancel();
                 //Show and hide navigation bar (Immersive mode)
                 View showAndHideBars = findViewById(R.id.quizlayout);
                 showAndHideBars.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -339,6 +374,60 @@ public class QuizActivity extends AppCompatActivity {
                 secondOption.setText("B. " + option2List.get(0).toString());
                 thirdOption.setText("C. " + option3List.get(0).toString());
                 fourthOption.setText("D. " + option4List.get(0).toString());
+
+                for (int i = 0; i < answerList.size(); i++) {
+                    Log.i("Answers", "Answer number " + i + " " + answerList.get(i));
+                }
+
+
+                firstOption.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        secondOption.setTextColor(Color.GRAY);
+                        secondOption.setEnabled(false);
+                        thirdOption.setTextColor(Color.GRAY);
+                        thirdOption.setEnabled(false);
+                        fourthOption.setTextColor(Color.GRAY);
+                        fourthOption.setEnabled(false);
+
+                    }
+                });
+
+                secondOption.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        firstOption.setTextColor(Color.GRAY);
+                        firstOption.setEnabled(false);
+                        thirdOption.setTextColor(Color.GRAY);
+                        thirdOption.setEnabled(false);
+                        fourthOption.setTextColor(Color.GRAY);
+                        fourthOption.setEnabled(false);
+                    }
+                });
+
+                thirdOption.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        firstOption.setTextColor(Color.GRAY);
+                        firstOption.setEnabled(false);
+                        secondOption.setTextColor(Color.GRAY);
+                        secondOption.setEnabled(false);
+                        fourthOption.setTextColor(Color.GRAY);
+                        fourthOption.setEnabled(false);
+                    }
+                });
+
+                fourthOption.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        firstOption.setTextColor(Color.GRAY);
+                        firstOption.setEnabled(false);
+                        thirdOption.setTextColor(Color.GRAY);
+                        thirdOption.setEnabled(false);
+                        secondOption.setTextColor(Color.GRAY);
+                        secondOption.setEnabled(false);
+                    }
+                });
 
 
             } catch (JSONException e) {
