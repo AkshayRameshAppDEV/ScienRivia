@@ -40,87 +40,28 @@ public class QuizActivity extends AppCompatActivity {
 
     int nextQuestionCount = 1;
 
+    int nextItemAnswerListCounter = 0;
+
     int arrayListgetChooseAnswer = 0;
+
+
+    int score = 0;
 
 
     TextView questionTextView, firstOption, secondOption, thirdOption, fourthOption;
     Random random;
 
 
-//    public void chooseAnswer(View view)
-//    {
-////        int arrayListCorrectAnswer = Integer.parseInt(answerList.get(arrayListgetChooseAnswer));
-////        int tagNumber = Integer.parseInt(view.getTag().toString());
-////        if(arrayListCorrectAnswer == tagNumber)
-////        {
-////            Log.i("correct", "This is the correct answer");
-////
-////        }
-//
-//        firstOption.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.mak
-//            }
-//        });
-//
-//
-//    }
-
-
-
-
-//    public void nextQuestion(View view) {
-//        if (c == null) {
-//            c = quizDB.rawQuery("SELECT * FROM quiz", null);
-//            c.moveToFirst();
-//        }
-//        questionTextView.setText("");
-//        firstOption.setText("");
-//        secondOption.setText("");
-//        thirdOption.setText("");
-//        fourthOption.setText("");
-//
-//        if (c != null && c.getCount() > 0 && !c.isAfterLast()) {
-//
-//
-////            questionW = c.getColumnIndex("questionDB");
-////                    option1W = c.getColumnIndex("option1DB");
-////                    option2W = c.getColumnIndex("option2DB");
-////                    option3W = c.getColumnIndex("option3DB");
-////                    option4W = c.getColumnIndex("option4DB");
-//
-//            String question = c.getString(c.getColumnIndex("questionDB"));
-//            String option1 = c.getString(c.getColumnIndex("option1DB"));
-//            String option2 = c.getString(c.getColumnIndex("option2DB"));
-//            String option3 = c.getString(c.getColumnIndex("option3DB"));
-//            String option4 = c.getString(c.getColumnIndex("option4DB"));
-//
-//            Log.i("Result", question + "\n" + option1 + "\n" + option2 + "\n" + option3 + "\n" + option4);
-//            Log.i("Result", "-----------------------------------------------------------------------------------------");
-//
-//            questionTextView.setText(question);
-//            firstOption.setText(option1);
-//            secondOption.setText(option2);
-//            thirdOption.setText(option3);
-//            fourthOption.setText(option4);
-//            c.moveToNext();
-//        }
-//
-//
-//    }
-
     public void nextQuestion(View view) {
         if (nextQuestionCount == questionsList.size()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setCancelable(false);
-            builder.setTitle("Your Score is: 20/20 ");
+            builder.setTitle("Your Score is: " + score + "/" + updateCountFromHome);
             builder.setMessage("Do You Want To Play Again ?");
             builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    //if user pressed "yes", then he is allowed to exit from application
-//                deleteDatabase("QUIZ");
+
                     questionsList.clear();
                     option1List.clear();
                     option2List.clear();
@@ -128,6 +69,8 @@ public class QuizActivity extends AppCompatActivity {
                     option4List.clear();
                     answerList.clear();
                     nextQuestionCount = 1;
+                    nextItemAnswerListCounter = 0;
+                    score = 0;
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.addCategory(Intent.CATEGORY_HOME);
                     startActivity(intent);
@@ -145,16 +88,16 @@ public class QuizActivity extends AppCompatActivity {
             builder.setNegativeButton("Restart", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    //if user select "No", just cancel this dialog and continue with app
 
-//                deleteDatabase("QUIZ");
                     questionsList.clear();
                     option1List.clear();
                     option2List.clear();
                     option3List.clear();
                     option4List.clear();
                     answerList.clear();
+                    nextItemAnswerListCounter = 0;
                     nextQuestionCount = 1;
+                    score = 0;
 
                     onRestart();
 
@@ -205,6 +148,7 @@ public class QuizActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+
 
         questionsList = new ArrayList<>();
         option1List = new ArrayList<>();
@@ -284,7 +228,9 @@ public class QuizActivity extends AppCompatActivity {
                 option3List.clear();
                 option4List.clear();
                 answerList.clear();
+                nextItemAnswerListCounter = 0;
                 nextQuestionCount = 1;
+                score = 0;
 
                 onRestart();
 
@@ -383,12 +329,25 @@ public class QuizActivity extends AppCompatActivity {
                 firstOption.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+
+                        if (Integer.parseInt(firstOption.getTag().toString()) == Integer.parseInt(answerList.get(nextItemAnswerListCounter))) {
+                            score++;
+                            firstOption.setTextColor(Color.GREEN);
+                        } else {
+                            firstOption.setTextColor(Color.RED);
+                        }
+
+
+                        firstOption.setEnabled(false);
                         secondOption.setTextColor(Color.GRAY);
                         secondOption.setEnabled(false);
                         thirdOption.setTextColor(Color.GRAY);
                         thirdOption.setEnabled(false);
                         fourthOption.setTextColor(Color.GRAY);
                         fourthOption.setEnabled(false);
+                        nextItemAnswerListCounter++;
+
 
                     }
                 });
@@ -396,36 +355,72 @@ public class QuizActivity extends AppCompatActivity {
                 secondOption.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+                        if (Integer.parseInt(secondOption.getTag().toString()) == Integer.parseInt(answerList.get(nextItemAnswerListCounter))) {
+                            score++;
+                            secondOption.setTextColor(Color.GREEN);
+                        } else {
+                            secondOption.setTextColor(Color.RED);
+                        }
+
+                        secondOption.setEnabled(false);
                         firstOption.setTextColor(Color.GRAY);
                         firstOption.setEnabled(false);
                         thirdOption.setTextColor(Color.GRAY);
                         thirdOption.setEnabled(false);
                         fourthOption.setTextColor(Color.GRAY);
                         fourthOption.setEnabled(false);
+                        nextItemAnswerListCounter++;
+
                     }
                 });
 
                 thirdOption.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+
+                        if (Integer.parseInt(thirdOption.getTag().toString()) == Integer.parseInt(answerList.get(nextItemAnswerListCounter))) {
+                            score++;
+                            thirdOption.setTextColor(Color.GREEN);
+                        } else {
+                            thirdOption.setTextColor(Color.RED);
+                        }
+
+                        thirdOption.setEnabled(false);
                         firstOption.setTextColor(Color.GRAY);
                         firstOption.setEnabled(false);
                         secondOption.setTextColor(Color.GRAY);
                         secondOption.setEnabled(false);
                         fourthOption.setTextColor(Color.GRAY);
                         fourthOption.setEnabled(false);
+                        nextItemAnswerListCounter++;
+
                     }
                 });
 
                 fourthOption.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+
+                        if (Integer.parseInt(fourthOption.getTag().toString()) == Integer.parseInt(answerList.get(nextItemAnswerListCounter))) {
+                            score++;
+                            fourthOption.setTextColor(Color.GREEN);
+                        } else {
+                            fourthOption.setTextColor(Color.RED);
+                        }
+
+
+                        fourthOption.setEnabled(false);
                         firstOption.setTextColor(Color.GRAY);
                         firstOption.setEnabled(false);
                         thirdOption.setTextColor(Color.GRAY);
                         thirdOption.setEnabled(false);
                         secondOption.setTextColor(Color.GRAY);
                         secondOption.setEnabled(false);
+                        nextItemAnswerListCounter++;
+
                     }
                 });
 
